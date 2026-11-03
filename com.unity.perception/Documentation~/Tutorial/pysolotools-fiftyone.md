@@ -44,6 +44,7 @@ pip install openexr
 ```shell
 pip install pysolotools-fiftyone
 ```
+> ℹ️ The above will not work until we go public. Until then you need to install pysolotools-fiftyone with `pip install pysolotools-fiftyone --index-url=https://artifactory.prd.it.unity3d.com/artifactory/api/pypi/pypi/simple` *this info should be remvoed when we go public*
 
 </br>
 

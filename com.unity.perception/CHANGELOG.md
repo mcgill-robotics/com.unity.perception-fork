@@ -23,79 +23,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.0.0-preview.1] - 2022-11-17
 
-### Upgrade Notes
-
-The Perception package has been upgraded to support versions 2021.3+ and 2022.1+ of the Unity Editor. Along side this change, support for Unity Editor version 2020 has been deprecated. Existing Unity 2020 projects that use the perception package will need to be upgraded to ensure compatibility with the Perception package.
-
-CategoricalParameter type specialization classes (e.g. GameObjectParameter) have been deprecated and will need to be replaced with their template equivalent (e.g. CategoricalParameter<GameObject>).
-
 ### Added
 
 Added the `timestamp` field back to the JSON output for captures.
-
-Added the Accumulation feature for rendering techniques that require accumulated frames, with the primary use case being path tracing.
-
-The keypoint labeler can now be configured to show an icon for an occluded keypoint during real-time visualization.
-
-Sample scenes for different labelers
-
-Added full SkinnedMeshRenderer support to the 3D Bounding Box labeler, enabling tight-fitting boxes on humans, animals, and other animated characters.
-
-Added Metadata labeler.
-
-Multiple semantic segmentation labelers can be present at once
-
-RenderedObjectInfo and bounding box labelers now reports hierarchical relationships (such as instance id of parent, child, etc.) for all rendered objects.
-
-Added support for IEnumerable in IMessageBuilder.
-
-Super resolution option to the Unity Camera Sensor
-
-Added a new "Sensor Type" field to the PerceptionCamera to enable users to author, select, and capture data from different camera sensor types and projections within the perception framework.
-
-Added label id and label names for each object reported in an Instance Segmentation annotation.
-
-Added each keypoint's cartesian location in camera space
-
-Editor And Runtime Settings added. This can be used to transfer configs from editor to runtime
-
-Dataset generation can be resumed
-
-Perception endpoint will now serialize annotations that implement the IMessageProvider interface.
-
-Added consumer endpoint validation to check if endpoint properties are valid. Consumer endpoint now calls an endpoint's validation and displays errors to the user.
-
-Added alphaThreshold parameter the PerceptionCamera to configure how translucent materials appear in segmentation images.
-
-Added layerMaskOverride parameter to the PerceptionCamera to configure object filtering during labeler data capture.
-
-Added a check to warn users if multiple GroundTruthRenderFeatures are present in URP projects.
-
-### Changed
-
-Changed the default serialization format from perception to Solo.
-
-The Perception package has been upgraded to support versions 2021.3.7+ and 2022.1+ of the Unity Editor.
-
-Support for Unity Editor version 2020 has been deprecated.
-
-Renamed "super resolution" Perception Camera feature to "super sampling" to clarify the exact technique used to generate the anti-aliasing effect.
-
-Authoring new forms of pixel based ground truth data has been simplified with the new CameraSensorChannel interface. A single CameraSensorChannel will now do the work of what originally took three coordinated custom pass classes (URP, HDRP, and CrossPipeline) to accomplish.
-
-The type specializations of the generic CategoricalParameter class can now be used directly. Derived classes like GameObjectParameter are no longer required to define new type specializations for the CategoricalParameter class.
-
-Deprecated the CategoricalParameter.GetCategoryCount() method and replaced it with the new CategoricalParameter.Count property
-
-Semantic segmentation annotations report labels present in the image
-
-### Removed
-
-Dataset visualizer removed
-
-URP support removed 
-
-Removed redundant type specialization classes that derive from the  CategoricalParameter class (e.g. GameObjectParameter).
 
 ### Fixed
 
@@ -104,6 +34,30 @@ Fixed a bug where frames would not be written to disk until the simulation was f
 Fixed a bug where using the crash restore feature would cause the `--output-path` flag to be ignored.
 
 Fixed the name of the description field in the sensor definition JSON output. Changed from `definition` field `description`.
+
+## [0.16.0-preview.2] - 2022-09-19
+
+### Upgrade Notes
+
+Demo project now uses unity 2021.3.9f1
+
+### Added
+
+Added the Accumulation feature for rendering techniques that require accumulated frames, with the primary use case being path tracing.
+
+The keypoint labeler can now be configured to show an icon for an occluded keypoint during real-time visualization.
+
+### Changed
+
+Renamed "super resolution" Perception Camera feature to "super sampling" to clarify the exact technique used to generate the anti-aliasing effect.  
+
+### Removed
+
+Dataset visualizer removed
+
+URP support removed
+
+### Fixed
 
 Moved `Frames Per Iteration` field into the `Scenario Properties` pane in the scenario editor. 
 
@@ -121,13 +75,101 @@ Fixed the empty spacing between items in the Categorical Paremeter UI.
 
 Metadata labaler delayed frame output generation.
 
+### Known Issues
+
+When using the Accumulation feature, the Scene view should not be visible at runtime, otherwise the captured images will not be accumulated.
+
+## [0.15.0-preview.1] - 2022-08-04
+
+### Upgrade Notes
+
+The Perception package has been upgraded to support versions 2021.3+ and 2022.1+ of the Unity Editor. Along side this change, support for Unity Editor version 2020 has been deprecated. Existing Unity 2020 projects that use the perception package will need to be upgraded to ensure compatibility with the Perception package.
+
+### Added
+
+Sample scenes for different labelers
+
+Added full SkinnedMeshRenderer support to the 3D Bounding Box labeler, enabling tight-fitting boxes on humans, animals, and other animated characters.
+
+Added Metadata labeler.
+
+RenderedObjectInfo labeler now reports hierarchical relationships (such as instance id of parent, child, etc.) for all rendered objects.
+
+Added support for "hierarchical" bounding boxes.
+
+Added support for IEnumerable in IMessageBuilder.
+
+Super resolution option to the Unity Camera Sensor
+
+### Changed
+
+Changed the default serialization format from perception to Solo.
+
+The Perception package has been upgraded to support versions 2021.3.7+ and 2022.1+ of the Unity Editor.
+
+Support for Unity Editor version 2020 has been deprecated.
+
+### Fixed
+
 Fixed burst compilation error with EncodeJob<T>()
 
 Fixed job thread count being set to zero in PixelWeightsUtility when the job system is disabled
 
 Fixed sporadic pixel position labeler test failures due to a shader that was not prewarmed
 
+## [0.14.0-preview.1] - 2022-06-22
+
+### Added
+
+Added a new "Sensor Type" field to the PerceptionCamera to enable users to author, select, and capture data from different camera sensor types and projections within the perception framework.
+
+Added spaces between words in Labeler class names in the PerceptionCamera inspector.
+
+Added label id and label names for each object reported in an Instance Segmentation annotation.
+
+Added each keypoint's cartesian location in camera space
+
+Logging configuration file content on execution
+
+### Changed
+
+The calculation of 2D Bounding boxes has been moved to the GPU to improve capture speed.
+
+Authoring new forms of pixel based ground truth data has been simplified with the new CameraSensorChannel interface. A single CameraSensorChannel will now do the work of what originally took three coordinated custom pass classes (URP, HDRP, and CrossPipeline) to accomplish.
+
+Removed frame by frame caching of keypoint data per gameobject to increase labeler stability
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
 Issue with keypoint labelers and GameObjects without Animator components
+
+## [0.13.0-preview.3] - 2022-05-31
+
+### Added
+
+Added better handling of missing types for labelers and randomizers (only Unity 2021.3 and above)
+
+Editor And Runtime Settings added. This can be used to transfer configs from editor to runtime
+
+DatasetCapture.perceptionVersion now represents last perception package version
+
+Dataset generation can be resumed
+
+New instance segmentation 
+
+Multi semantic segmentation
+
+Perception endpoint will now serialize annotations that implement the IMessageProvider interface.
+
+### Changed
+
+Moved FixedLengthScenario.Constants.framesPerIteration to FixedLengthScenario.framesPerIteration, to address an issue when running in UCVD.
+
+### Fixed
 
 Metrics now report empty strings instead of null.
 
@@ -139,13 +181,39 @@ Fix FloatRangeElement uxml so that it doesn't cause errors in Unity versions ove
 
 Exception in KeypointLabeler when deleting and recreating humans each iteration
 
+## [0.12.0-preview.1] - 2022-04-13
+
+### Upgrade Notes
+
+CategoricalParameter type specialization classes (e.g. GameObjectParameter) have been deprecated and will need to be replaced with their template equivalent (e.g. CategoricalParameter<GameObject>).
+
+### Added
+
+Added consumer endpoint validation to check if endpoint properties are valid. Consumer endpoint now calls an endpoint's validation and displays errors to the user.
+
+Added alphaThreshold parameter the PerceptionCamera to configure how translucent materials appear in segmentation images.
+
+Added layerMaskOverride parameter to the PerceptionCamera to configure object filtering during labeler data capture.
+
+Added a check to warn users if multiple GroundTruthRenderFeatures are present in URP projects.
+
+### Changed
+
+The type specializations of the generic CategoricalParameter class can now be used directly. Derived classes like GameObjectParameter are no longer required to define new type specializations for the CategoricalParameter class.
+
+Deprecated the CategoricalParameter.GetCategoryCount() method and replaced it with the new CategoricalParameter.Count property
+
+Semantic segmentation annotations report labels present in the image
+
+### Removed
+
+Removed redundant type specialization classes that derive from the  CategoricalParameter class (e.g. GameObjectParameter).
+
+### Fixed
+
 The PerceptionCamera component with no labelers will no longer throw NullReferenceExceptions when viewed in the inspector.
 
 AnimationRandomizer now chooses random normalized start time for the selected animation instead of always starting from the beginning.
-
-### Known Issues
-
-When using the Accumulation feature, the Scene view should not be visible at runtime, otherwise the captured images will not be accumulated.
 
 ## [0.11.1-preview.1] - 2022-04-13
 

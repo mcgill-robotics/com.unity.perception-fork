@@ -32,5 +32,13 @@
   ],
   "unity": "2021.3",
   "unityRelease": "7f1",
-  "version": "1.0.0-preview.1"
+  "version": "1.0.0-preview.1",
+  "upmCi": {
+    "footprint": "c972749a389135362c1709c8338e5aff4667e988"
+  },
+  "repository": {
+    "url": "https://github.com/Unity-Technologies/perception.git",
+    "type": "git",
+    "revision": "e74755dcf1c6adf252e62ab2fbab6a5e3eb49dad"
+  }
 }

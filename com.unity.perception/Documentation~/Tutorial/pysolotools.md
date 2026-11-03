@@ -28,6 +28,7 @@ conda activate pysolotools_env
 ```shell
 pip install pysolotools
 ```
+> ℹ️ TODO: The above will not work until we go public. Until then you need to install pysolotools with `pip install pysolotools --index-url=https://artifactory.prd.it.unity3d.com/artifactory/api/pypi/pypi/simple` *this info should be removed when we go public*
 
 ## Using a Jupyter Notebook to analyze the SOLO Dataset
 Pysolotools comes with an example [Jupyter](https://jupyter.org/) notebook that can open and calculate statistics about the dataset.
@@ -44,6 +45,8 @@ The notebook is located on the Pysolotools Git repository.
 git clone https://github.com/Unity-Technologies/pysolotools
 cd pysolotools
 ```
+
+> ℹ️ TODO: The above will need HTTPS authentication to be setup by the user until the repo goes public. *this info should be removed when we go public*
 
 The notebook has a number of dependencies. Let's install those now.
 

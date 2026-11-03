@@ -24,6 +24,7 @@ conda activate pysolotools_env
 ```shell
 pip install pysolotools
 ```
+> ℹ️ The above will not work until we go public. Until then you need to install pysolotools with `pip install pysolotools --index-url=https://artifactory.prd.it.unity3d.com/artifactory/api/pypi/pypi/simple` *this info should be remvoed when we go public*
 
 ## Converting from SOLO to COCO
 Pysolotools comes with a command line application to convert from SOLO dataset to COCO.
