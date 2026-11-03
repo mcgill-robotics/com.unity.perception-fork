@@ -1,5 +1,59 @@
+# Perception 1.0.0-preview.1, McGill Robotics fork for Unity 6
+
+This is a fork of Unity's [Perception package](https://github.com/Unity-Technologies/com.unity.perception)
+at the `1.0.0-preview.1` tag. Unity stopped maintaining Perception, and 1.0.0-preview.1 targets Unity 2021.3 and
+HDRP 12. We use it for synthetic data generation in the McGill Robotics AUV simulator, which runs on Unity
+6000.0 with HDRP 17.0.4, so this fork carries the small set of changes needed to compile cleanly and render
+correctly there.
+
+The package name is still `com.unity.perception`. The code hardcodes `Packages/com.unity.perception/...` paths
+in many places, and keeping the name means existing scenes, prefabs and manifests keep working. All `.meta`
+files and GUIDs are unchanged from upstream.
+
+Tested with Unity 6000.0.62f1, HDRP 17.0.4, Burst 1.8.25, Collections 2.6.2 on Linux. It probably still
+works on later 6000.x releases but we have not checked.
+
+## Install
+
+The package lives in the `com.unity.perception/` subfolder, so the git URL needs `?path=`. In
+`Packages/manifest.json`:
+
+```json
+"com.unity.perception": "https://github.com/<owner>/com.unity.perception-fork.git?path=/com.unity.perception#1.0.0-preview.1-mcgill.1"
+```
+
+Replace `<owner>` with the GitHub account the fork is pushed to. You can use a branch name instead of the tag.
+
+To embed it instead, copy the `com.unity.perception/` folder into your project's `Packages/` folder.
+
+## What changed
+
+See [PATCHES.md](com.unity.perception/PATCHES.md) for every change relative to upstream and the reason for it.
+In short:
+
+- `GraphicsSettings.renderPipelineAsset` replaced with `defaultRenderPipeline`.
+- The end-of-frame blit of the PerceptionCamera to the screen now only runs when HDRP did not already draw that
+  camera. Before, on HDRP 17 it painted over all Screen Space Overlay UI.
+- Obsolete Unity 6, HDRP 17 and Collections 2 APIs replaced.
+- `package.json` updated for Unity 6000.0 and current dependency versions.
+- `Documentation~` removed from the package (107 MB). The docs are still online.
+
+## Known limitations
+
+- Perception only supports HDRP. URP and the built-in pipeline are not supported, same as upstream.
+- With super sampling or the fisheye (cubemap) sensor, the camera is a passthrough camera and its image reaches
+  the screen through the blit, which runs after HDRP draws the overlay UI. Overlay UI will not be visible on that
+  camera's screen output in those modes.
+- Two obsolete-API warnings remain: `EditorAnalytics` in `PerceptionAnalytics.cs` and `UxmlFactory`/`UxmlTraits`
+  in `UIntField.cs`. Fixing them needs a bigger rewrite and they do not affect behaviour.
+
+---
+
+*The original upstream README follows. Links into `Documentation~` now point at the upstream repository, since
+that folder was removed here.*
+
 <p align="center">
-  <img src="com.unity.perception/Documentation~/images/unity-wide-whiteback.png" align="middle" width="600"/>
+  <img src="https://raw.githubusercontent.com/Unity-Technologies/com.unity.perception/main/com.unity.perception/Documentation~/images/unity-wide-whiteback.png" align="middle" width="600"/>
 </p>
 <div align="center">
   <h1>Perception Package</h1>
@@ -22,53 +76,53 @@
 </blockquote>
 
 <p align="center">
-  <img src="com.unity.perception/Documentation~/images/labeler-showcase.jpg" align="center" />
+  <img src="https://raw.githubusercontent.com/Unity-Technologies/com.unity.perception/main/com.unity.perception/Documentation~/images/labeler-showcase.jpg" align="center" />
 </p>
 
 The Perception package provides a toolkit for generating large-scale synthetic datasets for computer vision training and validation. 
 ## Getting Started with the Perception Package
-**[🌟 Perception Synthetic Data Tutorial 🌟](com.unity.perception/Documentation~/Tutorial/TUTORIAL.md)**  
+**[🌟 Perception Synthetic Data Tutorial 🌟](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Tutorial/TUTORIAL.md)**  
 Ideal for those new to either Unity, the Perception package, or synthetic data in general. Detailed instructions covering all the important steps: installing the Unity Editor, creating your first synthetic data generation project, adding domain randomization, visualizing, and analyzing your generated datasets. **No prior experience required.**
 
-**[Quick Start Guide](com.unity.perception/Documentation~/SetupSteps.md)**  
-Instructions for adding the Perception package to your existing project. Recommended for users already familiar with Unity and the Perception package. If this is the first time exploring our toolset, we highly recommend briefly going through the **[Perception Synthetic Data Tutorial](com.unity.perception/Documentation~/Tutorial/TUTORIAL.md)**  below!
+**[Quick Start Guide](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/SetupSteps.md)**  
+Instructions for adding the Perception package to your existing project. Recommended for users already familiar with Unity and the Perception package. If this is the first time exploring our toolset, we highly recommend briefly going through the **[Perception Synthetic Data Tutorial](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Tutorial/TUTORIAL.md)**  below!
 
 
-**[Human Pose Labeling and Randomization Tutorial](com.unity.perception/Documentation~/HumanPose/TUTORIAL.md)**  
+**[Human Pose Labeling and Randomization Tutorial](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/HumanPose/TUTORIAL.md)**  
 Step by step instructions for using the keypoint, pose, and animation randomization tools included in the Perception package. We recommend that you complete the Perception Tutorial above before diving into this guide!
 
-**[Analyzing Datasets with Pysolotools](com.unity.perception/Documentation~/Tutorial/pysolotools.md)**  
+**[Analyzing Datasets with Pysolotools](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Tutorial/pysolotools.md)**  
 Introduction to Unity's [pysolotools](https://github.com/Unity-Technologies/pysolotools) - a python package for parsing, converting, and analyzing a SOLO dataset. Step by step instructions on how to parse a SOLO dataset and look at the dataset statistics in a [jupyter notebook](https://jupyter.org/).
 
-**[Visualizing a Dataset with Voxel51 Viewer](com.unity.perception/Documentation~/Tutorial/pysolotools-fiftyone.md)**  
+**[Visualizing a Dataset with Voxel51 Viewer](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Tutorial/pysolotools-fiftyone.md)**  
 We will walk through using [Voxel51](https://voxel51.com/) with our [custom SOLO importer](https://github.com/Unity-Technologies/pysolotools-fiftyone) to visualize a dataset.
 
-**[Converting to COCO](com.unity.perception/Documentation~/Tutorial/convert_to_coco.md)**  
+**[Converting to COCO](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Tutorial/convert_to_coco.md)**  
 We will use [pysolotools](https://github.com/Unity-Technologies/pysolotools) to convert a SOLO dataset into the [COCO](https://cocodataset.org/#home) format.
 
 ## Frequently Asked Questions
  
-[Check out our FAQ](com.unity.perception/Documentation~/FAQ/FAQ.md) for a list of common questions, tips, tricks, and sample code for common code patterns.
+[Check out our FAQ](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/FAQ/FAQ.md) for a list of common questions, tips, tricks, and sample code for common code patterns.
 
 ## Reference Documentation
 
-In-depth documentation on specific components of the package. For the full set of feature-based documentation, take a look at the [Features](com.unity.perception/Documentation~/Features/index.md) page.
+In-depth documentation on specific components of the package. For the full set of feature-based documentation, take a look at the [Features](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Features/index.md) page.
 
 | Feature                                                                                 | Description                                                                                                                                                                     |
 |-----------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Labeling](com.unity.perception/Documentation~/GroundTruthLabeling.md)                  | A component that marks a GameObject and its descendants with a set of labels                                                                                                    |
-| [Label Config](com.unity.perception/Documentation~/GroundTruthLabeling.md#label-config) | An asset that defines a taxonomy of labels for ground truth generation                                                                                                          |
-| [Perception Camera](com.unity.perception/Documentation~/PerceptionCamera.md)            | Captures RGB images and ground truth from a [Camera](https://docs.unity3d.com/Manual/class-Camera.html).                                                                        |
-| [Dataset Capture](com.unity.perception/Documentation~/DatasetCapture.md)                | Ensures sensors are triggered at proper rates and accepts data for the JSON dataset.                                                                                            |
-| [Accumulation / Path Tracing](com.unity.perception/Documentation~/Accumulation.md)      | Accumulation is a feature that can be used for rendering techniques that require frames to be accumulated, such as path tracing.                                                                                          |
-| [Randomization](com.unity.perception/Documentation~/Randomization/index.md)             | The Randomization tool set lets you integrate domain randomization principles into your simulation.                                                                             |
-| [Output Endpoint and Dataset Schema](com.unity.perception/Documentation~/Outputs.md)    | An endpoint is responsible for delivering the generated data to the user. Currently supported output endpoints are: Solo endpoint (default), Perception endpoint, and No Output.|
+| [Labeling](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/GroundTruthLabeling.md)                  | A component that marks a GameObject and its descendants with a set of labels                                                                                                    |
+| [Label Config](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/GroundTruthLabeling.md#label-config) | An asset that defines a taxonomy of labels for ground truth generation                                                                                                          |
+| [Perception Camera](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/PerceptionCamera.md)            | Captures RGB images and ground truth from a [Camera](https://docs.unity3d.com/Manual/class-Camera.html).                                                                        |
+| [Dataset Capture](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/DatasetCapture.md)                | Ensures sensors are triggered at proper rates and accepts data for the JSON dataset.                                                                                            |
+| [Accumulation / Path Tracing](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Accumulation.md)      | Accumulation is a feature that can be used for rendering techniques that require frames to be accumulated, such as path tracing.                                                                                          |
+| [Randomization](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Randomization/index.md)             | The Randomization tool set lets you integrate domain randomization principles into your simulation.                                                                             |
+| [Output Endpoint and Dataset Schema](https://github.com/Unity-Technologies/com.unity.perception/blob/main/com.unity.perception/Documentation~/Outputs.md)    | An endpoint is responsible for delivering the generated data to the user. Currently supported output endpoints are: Solo endpoint (default), Perception endpoint, and No Output.|
 
 ## Datasets and Sample Projects
 
 ### Synthetic Homes
 <p align="center">
-  <img src="com.unity.perception/Documentation~/images/synthetichomes.jpg" width="800"/>
+  <img src="https://raw.githubusercontent.com/Unity-Technologies/com.unity.perception/main/com.unity.perception/Documentation~/images/synthetichomes.jpg" width="800"/>
 </p>
 
 Head over to the [Synthetic Homes repository](https://github.com/Unity-Technologies/SyntheticHomes) for a 100K image dataset of annotated synthetic home interiors for the purpose of training computer vision models, as well as a configurable Unity based stand alone application for generating such datasets. 
@@ -91,14 +145,14 @@ The [Synthetic Humans](https://github.com/Unity-Technologies/com.unity.cv.synthe
 
 ### SynthDet
 <p align="center">
-  <img src="com.unity.perception/Documentation~/images/synthdet.png" width="800"/>
+  <img src="https://raw.githubusercontent.com/Unity-Technologies/com.unity.perception/main/com.unity.perception/Documentation~/images/synthdet.png" width="800"/>
 </p>
 
 [**SynthDet**](https://github.com/Unity-Technologies/SynthDet) is an end-to-end solution for training a 2D object detection model using synthetic data.
 
 ### Robotics Object Pose Estimation Demo
 <p align="center">
-  <img src="com.unity.perception/Documentation~/images/robotics_pose.png" width="800"/>
+  <img src="https://raw.githubusercontent.com/Unity-Technologies/com.unity.perception/main/com.unity.perception/Documentation~/images/robotics_pose.png" width="800"/>
 </p>
 
 The [**Robotics Object Pose Estimation**](https://github.com/Unity-Technologies/Robotics-Object-Pose-Estimation) project demonstrates pick-and-place with a robot arm in Unity. It includes using ROS with Unity, importing URDF models, collecting labeled training data using the Perception package, and training and deploying a deep learning model.
